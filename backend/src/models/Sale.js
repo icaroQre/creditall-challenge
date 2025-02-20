@@ -28,12 +28,24 @@ saleDate: {
 
 Sale.belongsTo(Client, {
     foreignKey: 'clientId',
+    as: 'client', // Define um alias consistente
     onDelete: 'CASCADE',
 });
 
 Sale.belongsTo(Product, {
     foreignKey: 'productId',
+    as: 'product', // Define um alias consistente
     onDelete: 'CASCADE',
+});
+
+Client.hasMany(Sale, {
+    foreignKey: 'clientId',
+    as: 'sales',
+});
+
+Product.hasMany(Sale, {
+    foreignKey: 'productId',
+    as: 'sales',
 });
 
 module.exports = Sale;
