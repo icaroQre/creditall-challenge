@@ -34,8 +34,8 @@ export default function UserTableList({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((client) => (
-          <UserTableLine key={client.id} client={client} onDelete={onDelete} onEdit={onEdit} />
+        {data.map((client, index) => (
+          <UserTableLine key={index} client={client} onDelete={onDelete} onEdit={onEdit} />
         ))}
       </TableBody>
     </Table>

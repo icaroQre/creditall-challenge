@@ -32,8 +32,8 @@ export default function ProductTableList({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((product) => (
-          <ProductTableLine key={product.id} product={product} onDelete={onDelete} onEdit={onEdit} />
+        {data.map((product, index) => (
+          <ProductTableLine key={index} product={product} onDelete={onDelete} onEdit={onEdit} />
         ))}
       </TableBody>
     </Table>

@@ -126,7 +126,7 @@ export default function Home() {
         </CardHeader>
 
         <CardContent className="w-full h-auto">
-          {products.length > 0 ? <ProductTableList data={products} onDelete={handleDelete} onEdit={handleEdit} /> : <h1>Nenhum item encontrado.</h1>}
+          <ProductTableList data={products} onDelete={handleDelete} onEdit={handleEdit} />
         </CardContent>
         <CardFooter>
         </CardFooter>
