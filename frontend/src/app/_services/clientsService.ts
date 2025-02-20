@@ -9,7 +9,7 @@ class ClientsService {
       return clients;
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
-      throw new Error("Não foi possível carregar a lista de clientes.");
+      throw error;
     }
   }
 
@@ -25,7 +25,7 @@ class ClientsService {
       return await createClient(data);
     } catch (error) {
       console.error("Erro ao adicionar cliente:", error);
-      throw new Error("Não foi possível adicionar o cliente.");
+      throw error;
     }
   }
 
@@ -37,7 +37,7 @@ class ClientsService {
       return await updateClient(id, data);
     } catch (error) {
       console.error("Erro ao atualizar cliente:", error);
-      throw new Error("Não foi possível atualizar o cliente.");
+      throw error;
     }
   }
 
@@ -49,7 +49,7 @@ class ClientsService {
       await deleteClient(id);
     } catch (error) {
       console.error("Erro ao remover cliente:", error);
-      throw new Error("Não foi possível remover o cliente.");
+      throw error;
     }
   }
 }

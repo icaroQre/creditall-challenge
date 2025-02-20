@@ -8,21 +8,24 @@ class ProductsService {
       return await getProducts();
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
-      throw new Error("Não foi possível carregar a lista de produtos.");
+      throw error;
     }
   }
 
   // Criar um novo produto
   async addNewProduct(data: Product): Promise<Product> {
-    if (!data.name || data.price <= 0 || data.stock < 0) {
-      throw new Error("Nome, preço positivo e estoque não negativo são obrigatórios.");
+    if (data.price <= 0) {
+      throw new Error("Preço deve ser positivo");
+    }
+    if (!data.name || !data.description ) {
+      throw new Error("Todos os campos devem conter valores válidos.");
     }
 
     try {
       return await createProduct(data);
     } catch (error) {
       console.error("Erro ao adicionar produto:", error);
-      throw new Error("Não foi possível adicionar o produto.");
+      throw error;
     }
   }
 
@@ -34,7 +37,7 @@ class ProductsService {
       return await updateProduct(id, data);
     } catch (error) {
       console.error("Erro ao atualizar produto:", error);
-      throw new Error("Não foi possível atualizar o produto.");
+      throw error;
     }
   }
 
@@ -46,7 +49,7 @@ class ProductsService {
       await deleteProduct(id);
     } catch (error) {
       console.error("Erro ao remover produto:", error);
-      throw new Error("Não foi possível remover o produto.");
+      throw error;
     }
   }
 }

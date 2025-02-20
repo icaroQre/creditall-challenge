@@ -44,25 +44,26 @@ export default function Home() {
     };
 
     fetchClients();
-  }, []);
+  }, [clients]);
 
   const handleDelete = async (clientId: number) => {
     try {
       await clientsService.removeClient(clientId);
       setClients((prevClients) => prevClients.filter(client => client.id !== clientId));
     } catch (err) {
-      console.error("Erro ao excluir cliente:", err);
+      alert(err);
     }
   };
   
   const handleEdit = async (clientId: number, data: Client) => {
     try {
       await clientsService.editClient(clientId, data);
+
       setClients((prevClients) =>
-      prevClients.map(client => client.id === clientId ? data : client)
-    );
+        prevClients.map(client => client.id === clientId ? data : client)
+      );
     } catch (err) {
-      console.error("Erro ao editar cliente:", err);
+      alert(err);
     }
   };
 

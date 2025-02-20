@@ -5,15 +5,18 @@ exports.createValidation = async (req, res, next) => {
         req.body.name = name.trim();
         req.body.description = description.trim();
 
-        if (!name || !description || price === undefined) {
+        if (!name || !description) {
             return res.status(400).json({ error: "Todos os campos são obrigatórios" });
+        }
+        if (!price) {
+            return res.status(400).json({ error: "O preço deve conter um valor válido" });
         }
 
         if (name.length < 3 || name.length > 100) {
             return res.status(400).json({ error: "O nome deve ter entre 3 e 100 caracteres" });
         }
 
-        if (description.length < 10 || description.length > 500) {
+        if (description.length < 5 || description.length > 500) {
             return res.status(400).json({ error: "A descrição deve ter entre 10 e 500 caracteres" });
         }
 

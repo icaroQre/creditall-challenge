@@ -10,13 +10,13 @@ exports.createValidation = async (req, res, next) => {
     try {
         const emailExist = await Client.findOne({
             where: {
-                email: email,
+                email: email.trim(),
             },
         });
 
         const cpfExist = await Client.findOne({
             where: {
-                cpf: cpf,
+                cpf: cpf.trim(),
             },
         });
 
