@@ -7,12 +7,6 @@ exports.createSale = async (req, res) => {
     const { clientId, productId, quantity, discount, status, saleDate } = req.body;
 
     try {
-        const client = await Client.findByPk(clientId);
-        const product = await Product.findByPk(productId);
-        if (!product || !client) {
-            return res.status(404).json({ error: "Cliente ou produto não encontrado" });
-        }
-
         const sale = await Sale.create({ clientId, productId, quantity, discount, status, saleDate });
         return res.status(201).json(sale);
     } catch (error) {
@@ -82,21 +76,16 @@ exports.updateSale = async (req, res) => {
             return res.status(404).json({ error: "Venda não encontrada" });
         }
 
-        // Verificar se cliente e produto existem
-        const client = await Client.findByPk(clientId);
-        const product = await Product.findByPk(productId);
-        if (!product || !client) {
-            return res.status(404).json({ error: "Cliente ou produto não encontrado" });
-        }
-
         // Atualizar os dados da venda
-        sale.clientId = clientId;
-        sale.productId = productId;
-        sale.quantity = quantity;
-        sale.discount = discount;
-        sale.status = status;
-        sale.saleDate = saleDate;
-
+        if (clientId) sale.clientId = clientId;
+        if (productId) sale.productId = productId;
+        if (quantity) sale.quantity = quantity;
+        if (discount) sale.discount = discount;
+        if (status && status == 'completed' || 'pending' || 'canceled'){
+            sale.status = status;
+        }
+        if (saleDate) sale.saleDate = saleDate;
+ 
         await sale.save();
         return res.status(200).json(sale);
     } catch (error) {
