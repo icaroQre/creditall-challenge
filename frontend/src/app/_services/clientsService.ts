@@ -15,8 +15,10 @@ class ClientsService {
 
   // Criar um novo cliente com validação
   async addNewClient(data: Client): Promise<Client> {
-    if (!data.name || !data.email) {
-      throw new Error("Nome e e-mail são obrigatórios.");
+
+    if(data.name === "" || data.email === "" || data.cpf === "") {
+      alert("Todos os campos devem ser preenchidos.");
+      throw new Error("Todos os campos devem ser preenchidos.");
     }
 
     try {

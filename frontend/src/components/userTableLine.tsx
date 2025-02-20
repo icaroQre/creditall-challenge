@@ -34,9 +34,9 @@ import { Client } from '@/app/_types';
 
 export default function UserTableLine({ client, onDelete, onEdit } : { client: Client, onDelete: (id: number) => void, onEdit: (id: number, data: Client) => void }) {
 
-    const [name, setName] = useState("");
-    const [email, setEmail] = useState("");
-    const [cpf, setCpf] = useState("");
+    const [name, setName] = useState(client.name);
+    const [email, setEmail] = useState(client.email);
+    const [cpf, setCpf] = useState(client.cpf);
     const [isOpen, setIsOpen] = useState(false);
 
   return (

@@ -54,10 +54,11 @@ export default function Home() {
       console.error("Erro ao excluir cliente:", err);
     }
   };
+  
   const handleEdit = async (clientId: number, data: Client) => {
     try {
       await clientsService.editClient(clientId, data);
-    setClients((prevClients) =>
+      setClients((prevClients) =>
       prevClients.map(client => client.id === clientId ? data : client)
     );
     } catch (err) {
@@ -74,7 +75,7 @@ export default function Home() {
       setEmail("");
       setCpf("");
     } catch (err) {
-      console.error("Erro ao criar cliente:", err);
+      alert(err);
     }
   };
 
