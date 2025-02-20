@@ -1,0 +1,26 @@
+{
+  "name": "creditall-challenge",
+  "version": "1.0.0",
+  "description": "* O sistema deve ser desenvolvido utilizando a linguagem de sua preferência.\r * Criar um CRUD para as seguintes entidades:\r   * **Produto**: Nome, Descrição e Preço.\r   * **Venda**: Produto, Data da venda, Quantidade do produto, Desconto, Status da venda.\r   * **Cliente**: Nome, Email, CPF.\r * Utilizar um banco de dados relacional (preferencialmente MySQL) para armazenar as informações.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node src/server.js",
+    "dev": "nodemon src/server.js",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "cors": "^2.8.5",
+    "creditall-challenge": "file:",
+    "dotenv": "^16.4.7",
+    "express": "^4.21.2",
+    "multer": "^1.4.5-lts.1",
+    "mysql2": "^3.12.0",
+    "sequelize": "^6.37.5"
+  },
+  "devDependencies": {
+    "nodemon": "^3.1.9"
+  }
+}
