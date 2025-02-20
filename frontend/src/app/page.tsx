@@ -1,101 +1,131 @@
-import Image from "next/image";
+"use client"
+
+import { useEffect, useState } from "react";
+import { clientsService } from "@/app/_services/clientsService";
+import { Client } from "@/app/_types/client";
+import {
+  Card,
+  CardContent,
+  CardDescription,
+  CardFooter,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
+import { Button } from "@/components/ui/button";
+import { CirclePlus } from "lucide-react";
+import UserTableList from "@/components/userTableList";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export default function Home() {
-  return (
-    <div className="grid grid-rows-[20px_1fr_20px] items-center justify-items-center min-h-screen p-8 pb-20 gap-16 sm:p-20 font-[family-name:var(--font-geist-sans)]">
-      <main className="flex flex-col gap-8 row-start-2 items-center sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={180}
-          height={38}
-          priority
-        />
-        <ol className="list-inside list-decimal text-sm text-center sm:text-left font-[family-name:var(--font-geist-mono)]">
-          <li className="mb-2">
-            Get started by editing{" "}
-            <code className="bg-black/[.05] dark:bg-white/[.06] px-1 py-0.5 rounded font-semibold">
-              src/app/page.tsx
-            </code>
-            .
-          </li>
-          <li>Save and see your changes instantly.</li>
-        </ol>
+  const [clients, setClients] = useState<Client[]>([]);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [cpf, setCpf] = useState("");
+  const [isOpen, setIsOpen] = useState(false);
 
-        <div className="flex gap-4 items-center flex-col sm:flex-row">
-          <a
-            className="rounded-full border border-solid border-transparent transition-colors flex items-center justify-center bg-foreground text-background gap-2 hover:bg-[#383838] dark:hover:bg-[#ccc] text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={20}
-              height={20}
-            />
-            Deploy now
-          </a>
-          <a
-            className="rounded-full border border-solid border-black/[.08] dark:border-white/[.145] transition-colors flex items-center justify-center hover:bg-[#f2f2f2] dark:hover:bg-[#1a1a1a] hover:border-transparent text-sm sm:text-base h-10 sm:h-12 px-4 sm:px-5 sm:min-w-44"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Read our docs
-          </a>
-        </div>
-      </main>
-      <footer className="row-start-3 flex gap-6 flex-wrap items-center justify-center">
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/file.svg"
-            alt="File icon"
-            width={16}
-            height={16}
-          />
-          Learn
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/window.svg"
-            alt="Window icon"
-            width={16}
-            height={16}
-          />
-          Examples
-        </a>
-        <a
-          className="flex items-center gap-2 hover:underline hover:underline-offset-4"
-          href="https://nextjs.org?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          <Image
-            aria-hidden
-            src="/globe.svg"
-            alt="Globe icon"
-            width={16}
-            height={16}
-          />
-          Go to nextjs.org →
-        </a>
-      </footer>
-    </div>
+  useEffect(() => {
+    const fetchClients = async () => {
+      try {
+        const data = await clientsService.fetchAllClients();
+        setClients(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchClients();
+  }, []);
+
+  const handleDelete = async (clientId: number) => {
+    try {
+      await clientsService.removeClient(clientId);
+      setClients((prevClients) => prevClients.filter(client => client.id !== clientId));
+    } catch (err) {
+      console.error("Erro ao excluir cliente:", err);
+    }
+  };
+  const handleEdit = async (clientId: number, data: Client) => {
+    try {
+      await clientsService.editClient(clientId, data);
+    setClients((prevClients) =>
+      prevClients.map(client => client.id === clientId ? data : client)
+    );
+    } catch (err) {
+      console.error("Erro ao editar cliente:", err);
+    }
+  };
+
+  const handleCreateClient = async () => {
+    try {
+      const newClient = await clientsService.addNewClient({ name, email, cpf });
+      setClients((prevClients) => [...prevClients, newClient]);
+      setIsOpen(false);
+      setName("");
+      setEmail("");
+      setCpf("");
+    } catch (err) {
+      console.error("Erro ao criar cliente:", err);
+    }
+  };
+
+  return (
+    <>
+      <Card className="w-[100%] h-auto">
+        <CardHeader className="mb-8 flex flex-row justify-between items-center">
+          <div className="flex flex-col items-start justify-start gap-2">
+            <CardTitle className="text-4xl">Clientes</CardTitle>
+            <CardDescription>
+              Lista de clientes da Creditall Holding Empresarial
+            </CardDescription>
+          </div>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+            <DialogTrigger asChild>
+              <Button className="bg-blue-500 text-white px-4 py-2 rounded-md flex flex-row items-center justify-center gap-2">
+                <CirclePlus /> Adicionar Cliente
+              </Button>
+            </DialogTrigger>
+            <DialogContent className="sm:max-w-[425px]">
+              <DialogHeader>
+                <DialogTitle>Adicionar Cliente</DialogTitle>
+                <DialogDescription>Preencha os dados do cliente e clique em salvar.</DialogDescription>
+              </DialogHeader>
+              <div className="grid gap-4 py-4">
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="name" className="text-right">Nome</Label>
+                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="col-span-3" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="email" className="text-right">Email</Label>
+                  <Input id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="col-span-3" />
+                </div>
+                <div className="grid grid-cols-4 items-center gap-4">
+                  <Label htmlFor="cpf" className="text-right">CPF</Label>
+                  <Input id="cpf" value={cpf} onChange={(e) => setCpf(e.target.value)} className="col-span-3" />
+                </div>
+              </div>
+              <DialogFooter>
+                <Button onClick={handleCreateClient} className="text-secondary">Salvar Cliente</Button>
+              </DialogFooter>
+            </DialogContent>
+          </Dialog>
+        </CardHeader>
+
+        <CardContent className="w-full h-auto">
+          {clients.length > 0 ? <UserTableList data={clients} onDelete={handleDelete} onEdit={handleEdit} /> : <h1>Nenhum item encontrado.</h1>}
+        </CardContent>
+        <CardFooter>
+        </CardFooter>
+      </Card>
+    </>
   );
 }
