@@ -27,9 +27,9 @@ exports.updateClient = async (req, res) => {
         if (!client) {
             return res.status(404).json({ error: "Cliente não encontrado" });
         }
-        client.name = name;
-        client.email = email;
-        client.cpf = cpf;
+        if(name) client.name = name;
+        if(email) client.email = email;
+        if(cpf) client.cpf = cpf;
         await client.save();
         return res.status(200).json(client);
     } catch (error) {
