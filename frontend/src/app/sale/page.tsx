@@ -43,6 +43,7 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import SaleForm from "@/components/forms/saleForm";
 
 export default function Home() {
   const [sales, setSales] = useState<Sale[]>([]);
@@ -86,15 +87,19 @@ export default function Home() {
     // }
   };
 
-  const handleCreateProducts = async (date: TfomrSale) => {
-    const formatDate = format(new Date(date.date), "yyyy-MM-dd");
+  const handleCreateSales = async (date: FormData) => {
+    const formatDate = format(
+      new Date(date.get("date") as string),
+      "yyyy-MM-dd"
+    );
     try {
       await salesService.addNewSale({
-        clientId: date.clientId,
-        productId: date.productId,
-        quantity: date.quantity,
-        status: date.status,
+        clientId: Number(date.get("clientId")),
+        productId: Number(date.get("productId")),
+        quantity: Number(date.get("quantity")),
+        status: date.get("status") as "completed" | "pending" | "canceled",
         saleDate: formatDate,
+        discount: Number(date.get("discount")),
       });
       const newSales = await salesService.fetchAllSales();
       setSales(newSales);
@@ -114,10 +119,6 @@ export default function Home() {
       discount: 0,
     },
   });
-
-  const handleSubmitSale = (data: TfomrSale) => {
-    handleCreateProducts(data);
-  };
 
   return (
     <>
@@ -142,118 +143,7 @@ export default function Home() {
                   Preencha os dados do produto e clique em salvar.
                 </DialogDescription>
               </DialogHeader>
-              <Form {...formSale}>
-                <form
-                  className="space-y-4"
-                  onSubmit={formSale.handleSubmit(handleSubmitSale)}
-                >
-                  <FormField
-                    control={formSale.control}
-                    name="clientId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>ID do Cliente</FormLabel>
-                        <FormControl>
-                          <Input type="text" {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formSale.control}
-                    name="productId"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>ID do Produto</FormLabel>
-                        <FormControl>
-                          <Input type="text" {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formSale.control}
-                    name="quantity"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Quantidade</FormLabel>
-                        <FormControl>
-                          <Input type="text" {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formSale.control}
-                    name="discount"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Desconto</FormLabel>
-                        <FormControl>
-                          <Input type="text" {...field} />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formSale.control}
-                    name="date"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Data da venda</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="date"
-                            {...field}
-                            value={
-                              field.value
-                                ? field.value.toISOString().split("T")[0]
-                                : ""
-                            }
-                            onChange={(e) =>
-                              field.onChange(new Date(e.target.value))
-                            }
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formSale.control}
-                    name="status"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Status da venda</FormLabel>
-                        <FormControl>
-                          <Select
-                            onValueChange={field.onChange} // Adicionando onChange corretamente
-                            defaultValue={field.value} // Define o valor inicial
-                          >
-                            <SelectTrigger className="w-[180px]">
-                              <SelectValue placeholder="Selecione" />
-                            </SelectTrigger>
-                            <SelectContent>
-                              <SelectItem value="completed">
-                                Finalizada
-                              </SelectItem>
-                              <SelectItem value="pending">Pendente</SelectItem>
-                              <SelectItem value="canceled">
-                                Cancelada
-                              </SelectItem>
-                            </SelectContent>
-                          </Select>
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-
-                  <DialogClose>
-                    <Button type="submit" className="text-secondary">
-                      Salvar
-                    </Button>
-                  </DialogClose>
-                </form>
-              </Form>
+              <SaleForm create={handleCreateSales} />
             </DialogContent>
           </Dialog>
         </CardHeader>

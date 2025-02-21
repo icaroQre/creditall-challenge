@@ -28,8 +28,7 @@ class SalesService {
     try {
       return await createSale(data);
     } catch (error) {
-      console.error("Erro ao registrar venda:", error);
-      throw new Error("Não foi possível registrar a venda.");
+      throw error;
     }
   }
 

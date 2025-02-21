@@ -34,6 +34,7 @@ import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { on } from "events";
 import { TfomrProduct } from "@/app/_types/product";
 import ProductForm from "../forms/productForm";
+import { set } from "date-fns";
 
 export default function ProductTableLine({
   product,
@@ -44,43 +45,8 @@ export default function ProductTableLine({
   onDelete: (id: number) => void;
   onEdit: (id: number, data: FormData) => void;
 }) {
-  const [name, setName] = useState(product.name);
-  const [description, setDescription] = useState(product.description);
-  const [price, setPrice] = useState(product.price);
-  const [image, setImage] = useState<string | File | undefined>(product.image);
   const [isOpen, setIsOpen] = useState(false);
-  const [imageIssOpen, setImageIsOpen] = useState(false);
-
-  const formProduct = useForm<TfomrProduct>({
-    defaultValues: {
-      name: product.name,
-      description: product.description,
-      price: product.price,
-      image: product.image,
-    },
-  });
-
-  const handleSubmitProduct = (data: TfomrProduct) => {
-    if (product.id !== undefined) {
-      const formDataProduct = new FormData();
-
-      formDataProduct.append("name", data.name);
-      formDataProduct.append("description", data.description);
-      formDataProduct.append("price", data.price.toString());
-
-      if (data.image instanceof File) {
-        // Garante que é um arquivo antes de adicionar
-        formDataProduct.append("image", data.image);
-      }
-
-      console.log("Dados enviados:");
-      formDataProduct.forEach((value, key) => {
-        console.log(`${key}:`, value);
-      });
-
-      onEdit(product.id, formDataProduct);
-    }
-  };
+  const [imageIsOpen, setImageIsOpen] = useState(false);
 
   return (
     <TableRow key={product.id}>
@@ -91,7 +57,7 @@ export default function ProductTableLine({
       <TableCell className="flex justify-end">
         <div className="flex items-center justify-center gap-2">
           {/* DIALOG VISUALIZAR IMAGEM DO PRODUTO */}
-          <Dialog open={imageIssOpen} onOpenChange={setImageIsOpen}>
+          <Dialog open={imageIsOpen} onOpenChange={setImageIsOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
@@ -122,7 +88,7 @@ export default function ProductTableLine({
 
           {/* DIALOG PARA EDITAR PRODUTO */}
 
-          <Dialog>
+          <Dialog open={isOpen} onOpenChange={setIsOpen}>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
@@ -139,6 +105,11 @@ export default function ProductTableLine({
                 </DialogDescription>
               </DialogHeader>
               <ProductForm product={product} edit={onEdit} />
+              <DialogClose>
+                <Button className="w-full" variant={"outline"}>
+                  Fechar
+                </Button>
+              </DialogClose>
             </DialogContent>
           </Dialog>
 

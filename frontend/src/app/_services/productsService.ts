@@ -19,8 +19,6 @@ class ProductsService {
 
   // Criar um novo produto
   async addNewProduct(data: Product): Promise<Product> {
-    console.log(data);
-
     if (!data.name || !data.description) {
       throw new Error("Todos os campos devem ser preenchidos.");
     }

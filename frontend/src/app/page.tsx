@@ -25,12 +25,10 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import ClientForm from "@/components/forms/clientForm";
 
 export default function Home() {
   const [clients, setClients] = useState<Client[]>([]);
-  const [name, setName] = useState("");
-  const [email, setEmail] = useState("");
-  const [cpf, setCpf] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -66,15 +64,16 @@ export default function Home() {
     }
   };
 
-  const handleCreateClient = async () => {
+  const handleCreateClient = async (data: FormData) => {
     try {
-      await clientsService.addNewClient({ name, email, cpf });
+      await clientsService.addNewClient({
+        name: data.get("name") as string,
+        email: data.get("email") as string,
+        cpf: data.get("cpf") as string,
+      });
       const newClients = await clientsService.fetchAllClients();
       setClients(newClients);
       setIsOpen(false);
-      setName("");
-      setEmail("");
-      setCpf("");
     } catch (err) {
       alert(err);
     }
@@ -103,46 +102,7 @@ export default function Home() {
                   Preencha os dados do cliente e clique em salvar.
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Nome
-                  </Label>
-                  <Input
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="email" className="text-right">
-                    Email
-                  </Label>
-                  <Input
-                    id="email"
-                    value={email}
-                    onChange={(e) => setEmail(e.target.value)}
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="cpf" className="text-right">
-                    CPF
-                  </Label>
-                  <Input
-                    id="cpf"
-                    value={cpf}
-                    onChange={(e) => setCpf(e.target.value)}
-                    className="col-span-3"
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button onClick={handleCreateClient} className="text-secondary">
-                  Salvar Cliente
-                </Button>
-              </DialogFooter>
+              <ClientForm create={handleCreateClient} />
             </DialogContent>
           </Dialog>
         </CardHeader>

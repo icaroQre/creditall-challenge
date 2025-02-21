@@ -1,14 +1,25 @@
-"use client";
-
-import React, { useState } from "react";
+import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Product } from "@/app/_types";
 import { useForm } from "react-hook-form";
+import { z } from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
-import { TfomrProduct } from "@/app/_types/product";
 import { DialogClose } from "../ui/dialog";
+import { Product } from "@/app/_types";
+import { TfomrProduct } from "@/app/_types/product";
+
+// Definindo o schema de validação com Zod
+const productSchema = z.object({
+  name: z.string().min(1, "Nome é obrigatório"),
+  description: z.string().min(1, "Descrição é obrigatória"),
+  price: z
+    .string()
+    .regex(/^\d+\.\d{2}$/, "O preço deve ter duas casas decimais (ex: 2.00)"),
+  image: z.union([z.string().optional(), z.instanceof(File).optional()]), // Aceita string (URL) ou File
+});
+
+type ProductFormData = z.infer<typeof productSchema>;
 
 export default function ProductForm({
   product,
@@ -19,38 +30,32 @@ export default function ProductForm({
   create?: (data: FormData) => void;
   edit?: (id: number, data: FormData) => void;
 }) {
-  const defaultValues = product
-    ? {
-        name: product.name,
-        description: product.description,
-        price: product.price,
-        image: product.image,
-      }
-    : {};
-
-  const formProduct = useForm<TfomrProduct>({
-    defaultValues,
+  const formProduct = useForm<ProductFormData>({
+    resolver: zodResolver(productSchema),
+    defaultValues: {
+      name: product?.name || "",
+      description: product?.description || "",
+      price: product?.price.toString() || "",
+      image: product?.image || undefined,
+    },
   });
 
-  const handleSubmitProduct = (data: TfomrProduct) => {
+  const handleSubmitProduct = (data: ProductFormData) => {
     const formDataProduct = new FormData();
     formDataProduct.append("name", data.name);
     formDataProduct.append("description", data.description);
-    formDataProduct.append("price", data.price.toString());
+    formDataProduct.append("price", data.price);
 
+    // Verifica se a imagem foi alterada antes de adicionar ao FormData
     if (data.image instanceof File) {
       formDataProduct.append("image", data.image);
     }
 
-    if (edit) {
-      if (product) {
-        if (product.id !== undefined) {
-          edit(product.id, formDataProduct);
-        }
+    if (product && edit) {
+      if (product.id !== undefined) {
+        edit(product.id, formDataProduct);
       }
-    }
-
-    if (create) {
+    } else if (create) {
       create(formDataProduct);
     }
   };
@@ -70,9 +75,16 @@ export default function ProductForm({
               <FormControl>
                 <Input type="text" placeholder="Nome" {...field} />
               </FormControl>
+              {/* Exibindo erro se existir */}
+              {formProduct.formState.errors.name && (
+                <p className="text-red-500 text-sm">
+                  {formProduct.formState.errors.name.message}
+                </p>
+              )}
             </FormItem>
           )}
         />
+
         <FormField
           control={formProduct.control}
           name="description"
@@ -82,9 +94,16 @@ export default function ProductForm({
               <FormControl>
                 <Input type="text" placeholder="Descrição" {...field} />
               </FormControl>
+              {/* Exibindo erro se existir */}
+              {formProduct.formState.errors.description && (
+                <p className="text-red-500 text-sm">
+                  {formProduct.formState.errors.description.message}
+                </p>
+              )}
             </FormItem>
           )}
         />
+
         <FormField
           control={formProduct.control}
           name="price"
@@ -92,11 +111,34 @@ export default function ProductForm({
             <FormItem>
               <FormLabel>Preço</FormLabel>
               <FormControl>
-                <Input type="text" placeholder="Preço" {...field} />
+                <Input
+                  type="text"
+                  placeholder="0.00"
+                  {...field}
+                  value={field.value} // Garante a exibição correta
+                  onChange={(e) => {
+                    let value = e.target.value.replace(/[^0-9.]/g, ""); // Permite apenas números e ponto
+                    if (value.includes(".")) {
+                      const parts = value.split(".");
+                      if (parts.length > 2) {
+                        value = parts[0] + "." + parts.slice(1).join(""); // Impede mais de um ponto
+                      }
+                      value = parts[0] + "." + (parts[1]?.slice(0, 2) || ""); // Garante 2 casas decimais
+                    }
+                    field.onChange(value);
+                  }}
+                />
               </FormControl>
+              {/* Exibindo erro se existir */}
+              {formProduct.formState.errors.price && (
+                <p className="text-red-500 text-sm">
+                  {formProduct.formState.errors.price.message}
+                </p>
+              )}
             </FormItem>
           )}
         />
+
         <FormField
           control={formProduct.control}
           name="image"
@@ -115,14 +157,19 @@ export default function ProductForm({
                   }}
                 />
               </FormControl>
+              {/* Exibindo erro se existir */}
+              {formProduct.formState.errors.image && (
+                <p className="text-red-500 text-sm">
+                  {formProduct.formState.errors.image.message}
+                </p>
+              )}
             </FormItem>
           )}
         />
-        <DialogClose>
-          <Button type="submit" className="text-secondary">
-            Salvar
-          </Button>
-        </DialogClose>
+
+        <Button type="submit" className="text-secondary">
+          Salvar
+        </Button>
       </form>
     </Form>
   );

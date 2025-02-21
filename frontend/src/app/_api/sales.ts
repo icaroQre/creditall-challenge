@@ -13,7 +13,14 @@ export const getSaleById = async (id: number) => {
 };
 
 export const createSale = async (data: object) => {
-  const response = await api.post(endpoint, data);
+  const response = await api
+    .post(endpoint, data)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data.error;
+    });
   return response.data;
 };
 
@@ -23,6 +30,13 @@ export const updateSale = async (id: number, data: object) => {
 };
 
 export const deleteSale = async (id: number) => {
-  const response = await api.delete(`${endpoint}/${id}`);
+  const response = await api
+    .delete(`${endpoint}/${id}`)
+    .then((response) => {
+      return response.data;
+    })
+    .catch((error) => {
+      throw error.response.data.error;
+    });
   return response.data;
 };
