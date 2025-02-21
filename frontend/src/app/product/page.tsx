@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import {
@@ -24,17 +24,16 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Product } from "../_types";
 import { productsService } from "../_services/productsService";
-import ProductTableList from "@/components/productTableList";
+import ProductTableList from "@/components/tableList/productTableList";
 
 export default function Home() {
-
   const [products, setProducts] = useState<Product[]>([]);
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
   const [image, setImage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
-  
+
   useEffect(() => {
     const fetchProducts = async () => {
       try {
@@ -47,23 +46,23 @@ export default function Home() {
 
     fetchProducts();
   }, []);
-  
+
   const handleDelete = async (productId: number) => {
     try {
       await productsService.removeProduct(productId);
-      const newProducts = await productsService.fetchAllProducts()
-      setProducts(newProducts)
+      const newProducts = await productsService.fetchAllProducts();
+      setProducts(newProducts);
     } catch (err) {
       alert(err);
     }
   };
-  
+
   const handleEdit = async (productId: number, data: FormData) => {
     try {
       await productsService.editProduct(productId, data);
-      
-      const newProducts = await productsService.fetchAllProducts()
-      setProducts(newProducts)
+
+      const newProducts = await productsService.fetchAllProducts();
+      setProducts(newProducts);
     } catch (err) {
       alert(err);
     }
@@ -71,9 +70,14 @@ export default function Home() {
 
   const handleCreateProducts = async () => {
     try {
-      await productsService.addNewProduct({ name, description, price: Number(price), image });
-      const newProducts = await productsService.fetchAllProducts()
-      setProducts(newProducts)
+      await productsService.addNewProduct({
+        name,
+        description,
+        price: Number(price),
+        image,
+      });
+      const newProducts = await productsService.fetchAllProducts();
+      setProducts(newProducts);
       setIsOpen(false);
       setName("");
       setDescription("");
@@ -103,34 +107,69 @@ export default function Home() {
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Adicionar Produto</DialogTitle>
-                <DialogDescription>Preencha os dados do produto e clique em salvar.</DialogDescription>
+                <DialogDescription>
+                  Preencha os dados do produto e clique em salvar.
+                </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">Nome</Label>
-                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="col-span-3" />
+                  <Label htmlFor="name" className="text-right">
+                    Nome
+                  </Label>
+                  <Input
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="col-span-3"
+                  />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="description" className="text-right">Descrição</Label>
-                  <Input id="description" value={description} onChange={(e) => setDescription(e.target.value)} className="col-span-3" />
+                  <Label htmlFor="description" className="text-right">
+                    Descrição
+                  </Label>
+                  <Input
+                    id="description"
+                    value={description}
+                    onChange={(e) => setDescription(e.target.value)}
+                    className="col-span-3"
+                  />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="price" className="text-right">Preço</Label>
-                  <Input id="price" value={price} onChange={(e) => setPrice(e.target.value)} className="col-span-3" />
+                  <Label htmlFor="price" className="text-right">
+                    Preço
+                  </Label>
+                  <Input
+                    id="price"
+                    value={price}
+                    onChange={(e) => setPrice(e.target.value)}
+                    className="col-span-3"
+                  />
                 </div>
               </div>
               <DialogFooter>
-                <Button onClick={handleCreateProducts} className="text-secondary">Salvar Produto</Button>
+                <Button
+                  onClick={handleCreateProducts}
+                  className="text-secondary"
+                >
+                  Salvar Produto
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </CardHeader>
 
         <CardContent className="w-full h-auto">
-          <ProductTableList data={products} onDelete={handleDelete} onEdit={handleEdit} />
+          {products.length > 0 ? (
+            <ProductTableList
+              data={products}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
+          ) : (
+            <h1>Nenhum item encontrado.</h1>
+          )}
         </CardContent>
-        <CardFooter>
-        </CardFooter>
+        <CardFooter></CardFooter>
       </Card>
     </>
   );

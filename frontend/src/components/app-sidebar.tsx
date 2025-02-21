@@ -1,4 +1,4 @@
-import { Calendar, Home, ScanBarcode , CircleDollarSign } from "lucide-react"
+import { Calendar, Home, ScanBarcode, CircleDollarSign } from "lucide-react";
 
 import {
   Sidebar,
@@ -9,7 +9,8 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
+import Image from "next/image";
 
 // Menu items.
 const items = [
@@ -26,16 +27,18 @@ const items = [
   {
     title: "Produtos",
     url: "/product",
-    icon: ScanBarcode ,
-  }
-]
+    icon: ScanBarcode,
+  },
+];
 
 export function AppSidebar() {
   return (
     <Sidebar className="bg-blue-500" collapsible="icon">
       <SidebarContent className="bg-[#1D1616] text-secondary">
         <SidebarGroup>
-          <SidebarGroupLabel className="text-4xl my-8 text-secondary cursor-pointer">Creditall</SidebarGroupLabel>
+          <SidebarGroupLabel className="text-4xl my-8 text-secondary cursor-pointer">
+            <Image src="/creditall.png" alt="Logo" width={200} height={50} />
+          </SidebarGroupLabel>
           <SidebarGroupContent>
             <SidebarMenu>
               {items.map((item) => (
@@ -53,5 +56,5 @@ export function AppSidebar() {
         </SidebarGroup>
       </SidebarContent>
     </Sidebar>
-  )
+  );
 }

@@ -1,2 +1,5 @@
+frontend/node_modules/
+frontend/.pnp.*
 backend/node_modules/
 backend/.env
+/node_modules/

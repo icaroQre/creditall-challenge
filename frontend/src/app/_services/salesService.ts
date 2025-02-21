@@ -13,7 +13,14 @@ class SalesService {
   }
 
   // Criar uma nova venda
-  async addNewSale(data: Sale): Promise<Sale> {
+  async addNewSale(data: {
+    clientId: number;
+    productId: number;
+    quantity: number;
+    status: "completed" | "pending" | "canceled";
+    saleDate: Date;
+    discount?: number;
+  }): Promise<Sale> {
     if (!data.clientId || !data.productId || data.quantity <= 0) {
       throw new Error("Cliente, produto e quantidade válida são obrigatórios.");
     }

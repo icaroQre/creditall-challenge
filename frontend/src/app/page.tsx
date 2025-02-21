@@ -1,4 +1,4 @@
-"use client"
+"use client";
 
 import { useEffect, useState } from "react";
 import { clientsService } from "@/app/_services/clientsService";
@@ -13,7 +13,7 @@ import {
 } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
-import UserTableList from "@/components/userTableList";
+import UserTableList from "@/components/tableList/userTableList";
 import {
   Dialog,
   DialogContent,
@@ -34,33 +34,33 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-      const fetchProducts = async () => {
-        try {
-          const data = await clientsService.fetchAllClients();
-          setClients(data);
-        } catch (err) {
-          console.error(err);
-        }
-      };
-  
-      fetchProducts();
-    }, []);
+    const fetchProducts = async () => {
+      try {
+        const data = await clientsService.fetchAllClients();
+        setClients(data);
+      } catch (err) {
+        console.error(err);
+      }
+    };
+
+    fetchProducts();
+  }, []);
 
   const handleDelete = async (clientId: number) => {
     try {
       await clientsService.removeClient(clientId);
-      const newClients = await clientsService.fetchAllClients()
-      setClients(newClients)
+      const newClients = await clientsService.fetchAllClients();
+      setClients(newClients);
     } catch (err) {
       alert(err);
     }
   };
-  
+
   const handleEdit = async (clientId: number, data: Client) => {
     try {
       await clientsService.editClient(clientId, data);
-      const newClients = await clientsService.fetchAllClients()
-      setClients(newClients)
+      const newClients = await clientsService.fetchAllClients();
+      setClients(newClients);
     } catch (err) {
       alert(err);
     }
@@ -69,8 +69,8 @@ export default function Home() {
   const handleCreateClient = async () => {
     try {
       await clientsService.addNewClient({ name, email, cpf });
-      const newClients = await clientsService.fetchAllClients()
-      setClients(newClients)
+      const newClients = await clientsService.fetchAllClients();
+      setClients(newClients);
       setIsOpen(false);
       setName("");
       setEmail("");
@@ -99,34 +99,66 @@ export default function Home() {
             <DialogContent className="sm:max-w-[425px]">
               <DialogHeader>
                 <DialogTitle>Adicionar Cliente</DialogTitle>
-                <DialogDescription>Preencha os dados do cliente e clique em salvar.</DialogDescription>
+                <DialogDescription>
+                  Preencha os dados do cliente e clique em salvar.
+                </DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">Nome</Label>
-                  <Input id="name" value={name} onChange={(e) => setName(e.target.value)} className="col-span-3" />
+                  <Label htmlFor="name" className="text-right">
+                    Nome
+                  </Label>
+                  <Input
+                    id="name"
+                    value={name}
+                    onChange={(e) => setName(e.target.value)}
+                    className="col-span-3"
+                  />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="email" className="text-right">Email</Label>
-                  <Input id="email" value={email} onChange={(e) => setEmail(e.target.value)} className="col-span-3" />
+                  <Label htmlFor="email" className="text-right">
+                    Email
+                  </Label>
+                  <Input
+                    id="email"
+                    value={email}
+                    onChange={(e) => setEmail(e.target.value)}
+                    className="col-span-3"
+                  />
                 </div>
                 <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="cpf" className="text-right">CPF</Label>
-                  <Input id="cpf" value={cpf} onChange={(e) => setCpf(e.target.value)} className="col-span-3" />
+                  <Label htmlFor="cpf" className="text-right">
+                    CPF
+                  </Label>
+                  <Input
+                    id="cpf"
+                    value={cpf}
+                    onChange={(e) => setCpf(e.target.value)}
+                    className="col-span-3"
+                  />
                 </div>
               </div>
               <DialogFooter>
-                <Button onClick={handleCreateClient} className="text-secondary">Salvar Cliente</Button>
+                <Button onClick={handleCreateClient} className="text-secondary">
+                  Salvar Cliente
+                </Button>
               </DialogFooter>
             </DialogContent>
           </Dialog>
         </CardHeader>
 
         <CardContent className="w-full h-auto">
-          {clients.length > 0 ? <UserTableList data={clients} onDelete={handleDelete} onEdit={handleEdit} /> : <h1>Nenhum item encontrado.</h1>}
+          {clients.length > 0 ? (
+            <UserTableList
+              data={clients}
+              onDelete={handleDelete}
+              onEdit={handleEdit}
+            />
+          ) : (
+            <h1>Nenhum item encontrado.</h1>
+          )}
         </CardContent>
-        <CardFooter>
-        </CardFooter>
+        <CardFooter></CardFooter>
       </Card>
     </>
   );

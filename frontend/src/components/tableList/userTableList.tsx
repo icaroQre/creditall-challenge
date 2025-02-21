@@ -1,4 +1,4 @@
-'use client'
+"use client";
 
 import {
   Table,
@@ -9,9 +9,9 @@ import {
 } from "@/components/ui/table";
 
 import { Client } from "@/app/_types";
-import UserTableLine from "./userTableLine";
+import UserTableLine from "../tableLine/userTableLine";
 
-interface TableListProps{
+interface TableListProps {
   data: Client[];
   onDelete: (id: number) => void;
   onEdit: (id: number, data: Client) => void;
@@ -21,12 +21,12 @@ export default function UserTableList({
   data,
   onDelete,
   onEdit,
-}: TableListProps ) {
-
+}: TableListProps) {
   return (
     <Table>
       <TableHeader>
         <TableRow>
+          <TableHead>ID</TableHead>
           <TableHead>Nome</TableHead>
           <TableHead>Email</TableHead>
           <TableHead>CPF</TableHead>
@@ -35,10 +35,14 @@ export default function UserTableList({
       </TableHeader>
       <TableBody>
         {data.map((client, index) => (
-          <UserTableLine key={index} client={client} onDelete={onDelete} onEdit={onEdit} />
+          <UserTableLine
+            key={index}
+            client={client}
+            onDelete={onDelete}
+            onEdit={onEdit}
+          />
         ))}
       </TableBody>
     </Table>
   );
 }
- 

@@ -16,15 +16,11 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} ${poppins.variable} antialiased`}
-      >
+      <body className={`${poppins.variable} ${poppins.variable} antialiased`}>
         <SidebarProvider defaultOpen={true}>
           <AppSidebar />
           <SidebarTrigger />
-            <div className="px-20 py-20 w-full h-auto">
-              {children}
-            </div>
+          <div className="px-20 py-20 w-full h-auto">{children}</div>
         </SidebarProvider>
       </body>
     </html>
