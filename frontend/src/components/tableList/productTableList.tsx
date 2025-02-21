@@ -8,7 +8,6 @@ import {
 import { Product } from "@/app/_types";
 import ProductTableLine from "../tableLine/productTableLine";
 import React from "react";
-import Image from "next/image";
 
 interface TableListProps {
   data: Product[];

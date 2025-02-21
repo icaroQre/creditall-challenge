@@ -9,13 +9,12 @@ import {
 } from "@/components/ui/table";
 
 import { Sale } from "@/app/_types";
-import UserTableLine from "../tableLine/userTableLine";
 import SaleTableLine from "../tableLine/saleTableLine";
 
 interface TableListProps {
   data: Sale[];
   onDelete: (id: number) => void;
-  onEdit: (id: number, data: Sale) => void;
+  onEdit?: (id: number, data: Sale) => void;
 }
 
 export default function SaleTableList({

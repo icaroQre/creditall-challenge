@@ -20,21 +20,13 @@ import {
   DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Product } from "@/app/_types";
 import Image from "next/image";
-import { useForm } from "react-hook-form";
-import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
-import { on } from "events";
-import { TfomrProduct } from "@/app/_types/product";
 import ProductForm from "../forms/productForm";
-import { set } from "date-fns";
 
 export default function ProductTableLine({
   product,

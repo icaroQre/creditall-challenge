@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -5,9 +7,7 @@ import { useForm } from "react-hook-form";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
-import { DialogClose } from "../ui/dialog";
 import { Product } from "@/app/_types";
-import { TfomrProduct } from "@/app/_types/product";
 
 // Definindo o schema de validação com Zod
 const productSchema = z.object({
@@ -16,7 +16,7 @@ const productSchema = z.object({
   price: z
     .string()
     .regex(/^\d+\.\d{2}$/, "O preço deve ter duas casas decimais (ex: 2.00)"),
-  image: z.union([z.string().optional(), z.instanceof(File).optional()]), // Aceita string (URL) ou File
+  image: z.any().optional(), // Evita erro no servidor
 });
 
 type ProductFormData = z.infer<typeof productSchema>;
@@ -142,7 +142,7 @@ export default function ProductForm({
         <FormField
           control={formProduct.control}
           name="image"
-          render={({ field: { onChange, ...field } }) => (
+          render={({ field: { onChange } }) => (
             <FormItem>
               <FormLabel>Imagem do Produto</FormLabel>
               <FormControl>
@@ -160,7 +160,7 @@ export default function ProductForm({
               {/* Exibindo erro se existir */}
               {formProduct.formState.errors.image && (
                 <p className="text-red-500 text-sm">
-                  {formProduct.formState.errors.image.message}
+                  {formProduct.formState.errors.image?.message?.toString()}
                 </p>
               )}
             </FormItem>

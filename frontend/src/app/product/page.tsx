@@ -15,18 +15,14 @@ import {
   Dialog,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Product } from "../_types";
 import { productsService } from "../_services/productsService";
 import ProductTableList from "@/components/tableList/productTableList";
 import ProductForm from "@/components/forms/productForm";
-import { TfomrProduct } from "../_types/product";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
@@ -68,12 +64,15 @@ export default function Home() {
 
   const handleCreateProducts = async (data: FormData) => {
     try {
+      const imageFile = data.get("image");
+
       await productsService.addNewProduct({
         name: data.get("name") as string,
         description: data.get("description") as string,
         price: Number(data.get("price")),
-        image: data.get("image") as string,
+        image: imageFile instanceof File ? imageFile : undefined, // Garante que não seja um erro
       });
+
       const newProducts = await productsService.fetchAllProducts();
       setProducts(newProducts);
       setIsOpen(false);

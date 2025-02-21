@@ -3,15 +3,7 @@
 import React, { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Eye, Trash2 } from "lucide-react";
-import {
-  Table,
-  TableBody,
-  TableCaption,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from "@/components/ui/table";
+import { Table, TableBody, TableCell, TableRow } from "@/components/ui/table";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -39,19 +31,16 @@ import { format, parseISO } from "date-fns";
 export default function SaleTableLine({
   sale,
   onDelete,
-  onEdit,
 }: {
   sale: Sale;
   onDelete: (id: number) => void;
-  onEdit: (id: number, data: Sale) => void;
+  onEdit?: (id: number, data: Sale) => void;
 }) {
   const [isOpen, setIsOpen] = useState(false);
-  const [product, setProduct] = useState(sale.product.name);
-  const [client, setClient] = useState(sale.client.name);
-  const [value, setValue] = useState(
-    sale.product.price * sale.quantity - sale.discount
-  );
-  const [saleDate, setSaleDate] = useState(sale.saleDate);
+  const [product] = useState(sale.product.name);
+  const [client] = useState(sale.client.name);
+  const [value] = useState(sale.product.price * sale.quantity - sale.discount);
+  const [saleDate] = useState(sale.saleDate);
   const formattedDate = format(parseISO(saleDate.toString()), "dd/MM/yyyy");
 
   return (
@@ -153,15 +142,7 @@ export default function SaleTableLine({
               </DialogHeader>
               <DialogFooter>
                 <DialogClose>
-                  <Button
-                    // onClick={() =>
-                    //   sale.id !== undefined &&
-                    //   onEdit(sale.id, { name, email, cpf })
-                    // }
-                    className="text-secondary"
-                  >
-                    Fechar
-                  </Button>
+                  <Button className="text-secondary">Fechar</Button>
                 </DialogClose>
               </DialogFooter>
             </DialogContent>

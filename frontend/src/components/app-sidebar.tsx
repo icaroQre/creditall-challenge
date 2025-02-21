@@ -1,4 +1,4 @@
-import { Calendar, Home, ScanBarcode, CircleDollarSign } from "lucide-react";
+import { Home, ScanBarcode, CircleDollarSign } from "lucide-react";
 
 import {
   Sidebar,

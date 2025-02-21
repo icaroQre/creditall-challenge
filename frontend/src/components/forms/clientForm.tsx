@@ -109,7 +109,7 @@ export default function ClientForm({
                   {...field}
                   value={field.value} // Garante a exibição correta
                   onChange={(e) => {
-                    let value = e.target.value.replace(/[^0-9]/g, ""); // Permite apenas números
+                    const value = e.target.value.replace(/[^0-9]/g, ""); // Permite apenas números
                     if (value.length <= 11) {
                       field.onChange(value);
                     }

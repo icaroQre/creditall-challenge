@@ -1,6 +1,6 @@
 "use client";
 
-const { format } = require("date-fns");
+import { format } from "date-fns";
 import { useEffect, useState } from "react";
 import {
   Card,
@@ -14,43 +14,19 @@ import { Button } from "@/components/ui/button";
 import { CirclePlus } from "lucide-react";
 import {
   Dialog,
-  DialogClose,
   DialogContent,
   DialogDescription,
-  DialogFooter,
   DialogHeader,
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { Sale } from "../_types";
 import { salesService } from "../_services/salesService";
 import SaleTableList from "@/components/tableList/saleTableList";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-} from "@/components/ui/form";
-import { TfomrSale } from "../_types/sale";
-import { useForm } from "react-hook-form";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import SaleForm from "@/components/forms/saleForm";
 
 export default function Home() {
   const [sales, setSales] = useState<Sale[]>([]);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -77,16 +53,6 @@ export default function Home() {
     }
   };
 
-  const handleEdit = async (salesId: number, data: Sale) => {
-    // try {
-    //   await salesService.(salesId, data);
-    //   const newSales = await salesService.fetchAllSales();
-    //   setSales(newSales);
-    // } catch (err) {
-    //   alert(err);
-    // }
-  };
-
   const handleCreateSales = async (date: FormData) => {
     const formatDate = format(
       new Date(date.get("date") as string),
@@ -98,7 +64,7 @@ export default function Home() {
         productId: Number(date.get("productId")),
         quantity: Number(date.get("quantity")),
         status: date.get("status") as "completed" | "pending" | "canceled",
-        saleDate: formatDate,
+        saleDate: new Date(formatDate),
         discount: Number(date.get("discount")),
       });
       const newSales = await salesService.fetchAllSales();
@@ -108,17 +74,6 @@ export default function Home() {
       alert(err);
     }
   };
-
-  const formSale = useForm<TfomrSale>({
-    defaultValues: {
-      clientId: undefined,
-      productId: undefined,
-      date: new Date(),
-      quantity: 1,
-      status: "completed",
-      discount: 0,
-    },
-  });
 
   return (
     <>
@@ -150,11 +105,7 @@ export default function Home() {
 
         <CardContent className="w-full h-auto">
           {sales.length > 0 ? (
-            <SaleTableList
-              data={sales}
-              onDelete={handleDelete}
-              onEdit={handleEdit}
-            />
+            <SaleTableList data={sales} onDelete={handleDelete} />
           ) : (
             <h1>Nenhum item encontrado.</h1>
           )}
