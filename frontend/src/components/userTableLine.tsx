@@ -80,7 +80,10 @@ export default function UserTableLine({ client, onDelete, onEdit } : { client: C
                    </DialogClose>
                   </DialogFooter>
                 </DialogContent>
-                </Dialog>   
+                </Dialog>
+
+
+                
                 <AlertDialog>
                   <AlertDialogTrigger>
                     <Button variant="destructive" className="flex flex-row items-center gap-2">

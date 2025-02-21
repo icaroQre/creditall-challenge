@@ -6,9 +6,10 @@ const Product = require("../models/Product");
 exports.createProduct = async (req, res) => {
     try {
         const { name, description, price } = req.body;
-        const image = req.file ? req.file.filename : null;
+        const image = req.file ? `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}` : null;
 
         const product = await Product.create({ name, description, price, image });
+
         return res.status(201).json(product);
     } catch (error) {
         return res.status(500).json({ error: error.message });

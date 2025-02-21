@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2, FileImage } from "lucide-react";
 import {
   TableCell,
   TableRow,
@@ -31,6 +31,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Product } from '@/app/_types';
+import Image from 'next/image';
 
 export default function ProductTableLine({ product, onDelete, onEdit } : { product: Product, onDelete: (id: number) => void, onEdit: (id: number, data: Product) => void }) {
 
@@ -39,6 +40,7 @@ export default function ProductTableLine({ product, onDelete, onEdit } : { produ
     const [price, setPrice] = useState(product.price);
     const [image, setImage] = useState(product.image);
     const [isOpen, setIsOpen] = useState(false);
+    const [imageIssOpen, setImageIsOpen] = useState(false);
 
   return (
     <TableRow key={product.id}>
@@ -47,6 +49,40 @@ export default function ProductTableLine({ product, onDelete, onEdit } : { produ
               <TableCell> {product.price} </TableCell>
             <TableCell className="flex justify-end">
               <div className="flex items-center justify-center gap-2">
+
+                {/* DIALOG VISUALIZAR IMAGEM DO PRODUTO */}
+                <Dialog open={imageIssOpen} onOpenChange={setImageIsOpen}>
+                  <DialogTrigger asChild>
+                    <Button
+                      variant="outline"
+                      className="flex flex-row items-center gap-2"
+                    >
+                      <Eye /> Visualizar produto
+                    </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px] flex items-center justify-center flex-col gap-12">
+                  <DialogHeader>
+                    <DialogTitle>Visualizar produto</DialogTitle>
+                  </DialogHeader>
+                    {product.image ? <Image src={product.image} alt="product image" width={500} height={500} />
+                    : 
+                    <div className='flex items-center justify-center flex-col gap-4'>
+                      <FileImage size={100} />
+                      <p>Imagem não cadastrada</p>
+                    </div>
+                    }
+                  </DialogContent>
+                </Dialog>
+
+
+
+
+
+
+
+
+
+
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
                 <Button

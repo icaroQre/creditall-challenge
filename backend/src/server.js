@@ -5,7 +5,7 @@ const sequelize = require("./config/database");
 
 const PORT = 8080;
 
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
+app.use("/uploads", express.static(path.join(__dirname, "../uploads")));
 
 (async () => {
     try {

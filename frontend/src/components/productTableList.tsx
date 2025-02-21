@@ -1,13 +1,14 @@
 import {
   Table,
   TableBody,
-  TableCell,
   TableHead,
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
 import { Product } from "@/app/_types";
 import ProductTableLine from "./productTableLine";
+import React from "react";
+import Image from "next/image";
 
 interface TableListProps{
   data: Product[];
@@ -33,8 +34,7 @@ export default function ProductTableList({
       </TableHeader>
       <TableBody>
         {data.map((product, index) => (
-          <ProductTableLine key={index} product={product} onDelete={onDelete} onEdit={onEdit} />
-        ))}
+          <ProductTableLine key={index} product={product} onDelete={onDelete} onEdit={onEdit} /> ))}
       </TableBody>
     </Table>
   );
