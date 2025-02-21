@@ -1,4 +1,9 @@
-import { getProducts, createProduct, updateProduct, deleteProduct } from "@/app/_api/products";
+import {
+  getProducts,
+  createProduct,
+  updateProduct,
+  deleteProduct,
+} from "@/app/_api/products";
 import { Product } from "@/app/_types/product";
 
 class ProductsService {
@@ -9,16 +14,15 @@ class ProductsService {
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
       throw error;
-    }  
+    }
   }
 
   // Criar um novo produto
   async addNewProduct(data: Product): Promise<Product> {
-    if (data.price <= 0) {
-      throw new Error("Preço deve ser positivo");
-    }
-    if (!data.name || !data.description ) {
-      throw new Error("Todos os campos devem conter valores válidos.");
+    console.log(data);
+
+    if (!data.name || !data.description) {
+      throw new Error("Todos os campos devem ser preenchidos.");
     }
 
     try {

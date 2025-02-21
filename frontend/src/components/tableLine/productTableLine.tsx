@@ -33,6 +33,7 @@ import { useForm } from "react-hook-form";
 import { Form, FormControl, FormField, FormItem, FormLabel } from "../ui/form";
 import { on } from "events";
 import { TfomrProduct } from "@/app/_types/product";
+import ProductForm from "../forms/productForm";
 
 export default function ProductTableLine({
   product,
@@ -119,7 +120,9 @@ export default function ProductTableLine({
             </DialogContent>
           </Dialog>
 
-          <Dialog open={isOpen} onOpenChange={setIsOpen}>
+          {/* DIALOG PARA EDITAR PRODUTO */}
+
+          <Dialog>
             <DialogTrigger asChild>
               <Button
                 variant="outline"
@@ -135,88 +138,7 @@ export default function ProductTableLine({
                   Preencha os dados do produto e clique em salvar.
                 </DialogDescription>
               </DialogHeader>
-
-              <Form {...formProduct}>
-                <form
-                  className="space-y-8"
-                  onSubmit={formProduct.handleSubmit(handleSubmitProduct)}
-                >
-                  <FormField
-                    control={formProduct.control}
-                    name="name"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nome</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder={product.name}
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formProduct.control}
-                    name="description"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Descrição</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder={product.description}
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formProduct.control}
-                    name="price"
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>Nome</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="text"
-                            placeholder={product.price.toString()}
-                            {...field}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <FormField
-                    control={formProduct.control}
-                    name="image"
-                    render={({ field: { onChange, ...field } }) => (
-                      <FormItem>
-                        <FormLabel>Imagem do Produto</FormLabel>
-                        <FormControl>
-                          <Input
-                            type="file"
-                            accept="image/*"
-                            onChange={(e) => {
-                              const file = e.target.files?.[0];
-                              if (file) {
-                                onChange(file); // Atualiza o campo no `useForm`
-                              }
-                            }}
-                          />
-                        </FormControl>
-                      </FormItem>
-                    )}
-                  />
-                  <DialogClose>
-                    <Button type="submit" className="text-secondary">
-                      Salvar
-                    </Button>
-                  </DialogClose>
-                </form>
-              </Form>
+              <ProductForm product={product} edit={onEdit} />
             </DialogContent>
           </Dialog>
 

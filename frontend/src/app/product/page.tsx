@@ -25,13 +25,11 @@ import { Label } from "@/components/ui/label";
 import { Product } from "../_types";
 import { productsService } from "../_services/productsService";
 import ProductTableList from "@/components/tableList/productTableList";
+import ProductForm from "@/components/forms/productForm";
+import { TfomrProduct } from "../_types/product";
 
 export default function Home() {
   const [products, setProducts] = useState<Product[]>([]);
-  const [name, setName] = useState("");
-  const [description, setDescription] = useState("");
-  const [price, setPrice] = useState("");
-  const [image, setImage] = useState("");
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
@@ -68,21 +66,17 @@ export default function Home() {
     }
   };
 
-  const handleCreateProducts = async () => {
+  const handleCreateProducts = async (data: FormData) => {
     try {
       await productsService.addNewProduct({
-        name,
-        description,
-        price: Number(price),
-        image,
+        name: data.get("name") as string,
+        description: data.get("description") as string,
+        price: Number(data.get("price")),
+        image: data.get("image") as string,
       });
       const newProducts = await productsService.fetchAllProducts();
       setProducts(newProducts);
       setIsOpen(false);
-      setName("");
-      setDescription("");
-      setPrice("");
-      setImage("");
     } catch (err) {
       alert(err);
     }
@@ -111,49 +105,7 @@ export default function Home() {
                   Preencha os dados do produto e clique em salvar.
                 </DialogDescription>
               </DialogHeader>
-              <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="name" className="text-right">
-                    Nome
-                  </Label>
-                  <Input
-                    id="name"
-                    value={name}
-                    onChange={(e) => setName(e.target.value)}
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="description" className="text-right">
-                    Descrição
-                  </Label>
-                  <Input
-                    id="description"
-                    value={description}
-                    onChange={(e) => setDescription(e.target.value)}
-                    className="col-span-3"
-                  />
-                </div>
-                <div className="grid grid-cols-4 items-center gap-4">
-                  <Label htmlFor="price" className="text-right">
-                    Preço
-                  </Label>
-                  <Input
-                    id="price"
-                    value={price}
-                    onChange={(e) => setPrice(e.target.value)}
-                    className="col-span-3"
-                  />
-                </div>
-              </div>
-              <DialogFooter>
-                <Button
-                  onClick={handleCreateProducts}
-                  className="text-secondary"
-                >
-                  Salvar Produto
-                </Button>
-              </DialogFooter>
+              <ProductForm create={handleCreateProducts} />
             </DialogContent>
           </Dialog>
         </CardHeader>
