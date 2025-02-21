@@ -2,7 +2,7 @@
 
 import React, { useState } from 'react'
 import { Button } from "@/components/ui/button";
-import { Pencil, Trash2 } from "lucide-react";
+import { Eye, Pencil, Trash2 } from "lucide-react";
 import {
   TableCell,
   TableRow,
@@ -44,8 +44,49 @@ export default function UserTableLine({ client, onDelete, onEdit } : { client: C
               <TableCell> {client.name} </TableCell>
               <TableCell> {client.email} </TableCell>
               <TableCell> {client.cpf} </TableCell>
-            <TableCell className="flex justify-end">
-              <div className="flex items-center justify-center gap-2">
+              <TableCell className="flex justify-end">
+                <div className="flex items-center justify-center gap-2">
+
+                {/* DIALOG VIZUALISAR FOTO DO PRODUTO */}
+                <Dialog open={isOpen} onOpenChange={setIsOpen}>
+                  <DialogTrigger asChild>
+                  <Button
+                    variant="outline"
+                    className="flex flex-row items-center gap-2"
+                  >
+                    <Eye /> Visualizar imgaem
+                  </Button>
+                  </DialogTrigger>
+                  <DialogContent className="sm:max-w-[425px]">
+                    <DialogHeader>
+                      <DialogTitle>Editar cliente</DialogTitle>
+                      <DialogDescription>Preencha os dados do cliente e clique em salvar.</DialogDescription>
+                    </DialogHeader>
+                      <div className="grid gap-4 py-4">
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="name" className="text-right" >Nome</Label>
+                          <Input id="name" placeholder={client.name} value={name} onChange={(e) => setName(e.target.value)} className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="email" className="text-right">Email</Label>
+                          <Input id="email" placeholder={client.email} value={email} onChange={(e) => setEmail(e.target.value)} className="col-span-3" />
+                        </div>
+                        <div className="grid grid-cols-4 items-center gap-4">
+                          <Label htmlFor="cpf" className="text-right">CPF</Label>
+                          <Input id="cpf" placeholder={client.cpf} value={cpf} onChange={(e) => setCpf(e.target.value)} className="col-span-3" />
+                        </div>
+                      </div>
+                    <DialogFooter>
+                    <DialogClose>
+                    <Button onClick={() => client.id !== undefined && onEdit(client.id, {name, email, cpf})} className="text-secondary">Salvar Cliente</Button>
+                    </DialogClose>
+                    </DialogFooter>
+                  </DialogContent>
+                  </Dialog>
+
+
+
+                {/* DIALOG EDITAR PRODUTO */}
                 <Dialog open={isOpen} onOpenChange={setIsOpen}>
                 <DialogTrigger asChild>
                 <Button
@@ -83,7 +124,12 @@ export default function UserTableLine({ client, onDelete, onEdit } : { client: C
                 </Dialog>
 
 
-                
+
+
+
+
+
+                {/* DIALOG EXCLUIR PRODUTO */}
                 <AlertDialog>
                   <AlertDialogTrigger>
                     <Button variant="destructive" className="flex flex-row items-center gap-2">

@@ -34,22 +34,23 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
 
   useEffect(() => {
-    const fetchClients = async () => {
-      try {
-        const data = await clientsService.fetchAllClients();
-        setClients(data);
-      } catch (err) {
-        console.error(err);
-      }
-    };
-
-    fetchClients();
-  }, [clients]);
+      const fetchProducts = async () => {
+        try {
+          const data = await clientsService.fetchAllClients();
+          setClients(data);
+        } catch (err) {
+          console.error(err);
+        }
+      };
+  
+      fetchProducts();
+    }, []);
 
   const handleDelete = async (clientId: number) => {
     try {
       await clientsService.removeClient(clientId);
-      setClients((prevClients) => prevClients.filter(client => client.id !== clientId));
+      const newClients = await clientsService.fetchAllClients()
+      setClients(newClients)
     } catch (err) {
       alert(err);
     }
@@ -58,10 +59,8 @@ export default function Home() {
   const handleEdit = async (clientId: number, data: Client) => {
     try {
       await clientsService.editClient(clientId, data);
-
-      setClients((prevClients) =>
-        prevClients.map(client => client.id === clientId ? data : client)
-      );
+      const newClients = await clientsService.fetchAllClients()
+      setClients(newClients)
     } catch (err) {
       alert(err);
     }
@@ -69,8 +68,9 @@ export default function Home() {
 
   const handleCreateClient = async () => {
     try {
-      const newClient = await clientsService.addNewClient({ name, email, cpf });
-      setClients((prevClients) => [...prevClients, newClient]);
+      await clientsService.addNewClient({ name, email, cpf });
+      const newClients = await clientsService.fetchAllClients()
+      setClients(newClients)
       setIsOpen(false);
       setName("");
       setEmail("");

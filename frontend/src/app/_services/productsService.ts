@@ -9,7 +9,7 @@ class ProductsService {
     } catch (error) {
       console.error("Erro ao buscar produtos:", error);
       throw error;
-    }
+    }  
   }
 
   // Criar um novo produto
@@ -30,7 +30,7 @@ class ProductsService {
   }
 
   // Atualizar um produto
-  async editProduct(id: number, data: Partial<Product>): Promise<Product> {
+  async editProduct(id: number, data: FormData): Promise<Product> {
     if (!id) throw new Error("ID do produto é obrigatório.");
 
     try {

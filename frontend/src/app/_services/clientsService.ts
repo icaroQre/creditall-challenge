@@ -5,8 +5,7 @@ class ClientsService {
   // Buscar todos os clientes
   async fetchAllClients(): Promise<Client[]> {
     try {
-      const clients = await getClients();
-      return clients;
+      return await getClients();
     } catch (error) {
       console.error("Erro ao buscar clientes:", error);
       throw error;

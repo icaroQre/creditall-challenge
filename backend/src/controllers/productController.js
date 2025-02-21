@@ -37,28 +37,33 @@ exports.updateProduct = async (req, res) => {
             return res.status(404).json({ error: "Produto não encontrado" });
         }
 
-        // Se houver um novo arquivo de imagem, exclua o antigo antes de atualizar
+        // Verifica se há um novo arquivo de imagem e, se houver, atualiza
         if (req.file) {
+            // Se houver uma imagem antiga, exclua-a
             if (product.image) {
                 const oldImagePath = path.join(__dirname, "..", "uploads", product.image);
                 if (fs.existsSync(oldImagePath)) {
-                    fs.unlinkSync(oldImagePath);
+                    fs.unlinkSync(oldImagePath); // Deleta a imagem antiga
                 }
             }
-            product.image = req.file.filename;
+
+            // Atualiza a imagem
+            product.image = `${req.protocol}://${req.get("host")}/uploads/${req.file.filename}`;
         }
 
+        // Atualiza os outros campos se fornecidos
         if (name) product.name = name;
         if (description) product.description = description;
         if (price) product.price = price;
 
+        // Salva as mudanças no banco de dados
         await product.save();
-        return res.status(200).json(product);
+
+        return res.status(200).json(product); // Retorna o produto atualizado
     } catch (error) {
         return res.status(500).json({ error: error.message });
     }
 };
-
 // Deletar um produto
 exports.deleteProduct = async (req, res) => {
     try {

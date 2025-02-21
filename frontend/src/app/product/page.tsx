@@ -46,24 +46,24 @@ export default function Home() {
     };
 
     fetchProducts();
-  }, [products]);
+  }, []);
   
   const handleDelete = async (productId: number) => {
     try {
       await productsService.removeProduct(productId);
-      setProducts((prevProducts) => prevProducts.filter(product => product.id !== productId));
+      const newProducts = await productsService.fetchAllProducts()
+      setProducts(newProducts)
     } catch (err) {
       alert(err);
     }
   };
   
-  const handleEdit = async (productId: number, data: Product) => {
+  const handleEdit = async (productId: number, data: FormData) => {
     try {
       await productsService.editProduct(productId, data);
-
-      setProducts((prevProducts) =>
-        prevProducts.map(product => product.id === productId ? data : product)
-      );
+      
+      const newProducts = await productsService.fetchAllProducts()
+      setProducts(newProducts)
     } catch (err) {
       alert(err);
     }
@@ -71,8 +71,9 @@ export default function Home() {
 
   const handleCreateProducts = async () => {
     try {
-      const newProduct = await productsService.addNewProduct({ name, description, price: Number(price), image });
-      setProducts((prevProducts) => [...prevProducts, newProduct]);
+      await productsService.addNewProduct({ name, description, price: Number(price), image });
+      const newProducts = await productsService.fetchAllProducts()
+      setProducts(newProducts)
       setIsOpen(false);
       setName("");
       setDescription("");

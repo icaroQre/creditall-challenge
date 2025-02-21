@@ -29,17 +29,20 @@ export const createProduct = async (data: object) => {
   return response.data;
 };
 
-export const updateProduct = async (id: number, data: object) => {
+export const updateProduct = async (id: number, data: FormData) => {
+  try {
+    const response = await api.put(`${endpoint}/${id}`, data, {
+      headers: {
+        "Content-Type": "multipart/form-data", // Define apenas para essa requisição
+      },
+    });
 
-  const response = await api.put(`${endpoint}/${id}`, data)
-  .then((response) => {
-    return response.data
-  })
-  .catch((error) => {
-    throw (error.response.data.error);
-  });
-  return response.data;
+    return response.data;
+  } catch (error) {
+    throw error || "Erro desconhecido ao atualizar o produto.";
+  }
 };
+
 
 export const deleteProduct = async (id: number) => {
   const response = await api.delete(`${endpoint}/${id}`)

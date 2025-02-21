@@ -13,7 +13,7 @@ import Image from "next/image";
 interface TableListProps{
   data: Product[];
   onDelete: (id: number) => void;
-  onEdit: (id: number, data: Product) => void;
+  onEdit: (id: number, data: FormData) => void;
 }
 
 export default function ProductTableList({
@@ -33,7 +33,7 @@ export default function ProductTableList({
         </TableRow>
       </TableHeader>
       <TableBody>
-        {data.map((product, index) => (
+        {data.length > 0 && data.map((product, index) => (
           <ProductTableLine key={index} product={product} onDelete={onDelete} onEdit={onEdit} /> ))}
       </TableBody>
     </Table>
