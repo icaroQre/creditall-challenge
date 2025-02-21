@@ -25,8 +25,8 @@ import {
   DialogTrigger,
 } from "@/components/ui/dialog";
 import { Product } from "@/app/_types";
-import Image from "next/image";
 import ProductForm from "../forms/productForm";
+import Image from "next/image";
 
 export default function ProductTableLine({
   product,
@@ -68,6 +68,7 @@ export default function ProductTableLine({
                   alt="product image"
                   width={500}
                   height={500}
+                  unoptimized
                 />
               ) : (
                 <div className="flex items-center justify-center flex-col gap-4">
